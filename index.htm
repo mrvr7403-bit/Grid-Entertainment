@@ -3,55 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Grid Entertainment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="bg"></div>
-
-<header>
-  <h1>Grid Entertainment <span class="verified">✔</span></h1>
-  <p>Официальная платформа эксклюзивного контента</p>
+<header class="topbar">
+  <div class="logo">
+    <img src="avatar.png" alt="Grid">
+    <span>Grid Entertainment</span>
+    <span class="verified">✔</span>
+  </div>
+  <button class="admin-btn" onclick="adminLogin()">Админ</button>
 </header>
 
-<main>
-
-  <section class="profile">
-    <img src="https://i.imgur.com/8Km9tLL.png" alt="avatar">
-    <div>
-      <h2>Grid Entertainment <span class="verified">✔</span></h2>
-      <p class="bio">Официальный аккаунт. Новости, анонсы, эксклюзив.</p>
-    </div>
-  </section>
-
-  <section class="post">
-    <h3>Первый пост</h3>
-    <p>
-      Добро пожаловать на официальную платформу Grid Entertainment.
-      Здесь контент появляется раньше других.
-    </p>
-  </section>
-
-  <section class="comments">
-    <h3>Комментарии</h3>
-
-    <input id="name" placeholder="Ваш ник">
-    <textarea id="text" placeholder="Комментарий"></textarea>
-
-    <button onclick="addComment()">Отправить</button>
-
-    <div id="comments"></div>
-
-    <button class="admin" onclick="adminLogin()">Админ-вход</button>
-  </section>
-
+<main class="feed">
+  <div id="posts"></div>
 </main>
 
-<footer>
-  <a href="policy.html">Политика и правила</a><br>
-  © Grid Entertainment
+<footer class="footer">
+  <a href="#">Политика конфиденциальности</a>
+  <a href="#">Правила</a>
 </footer>
 
 <script src="script.js"></script>
