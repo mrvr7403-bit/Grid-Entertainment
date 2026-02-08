@@ -4,152 +4,45 @@
   <meta charset="UTF-8">
   <title>Grid Entertainment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: #ffffff;
-    }
-
-    header {
-      background: #111;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #222;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    nav {
-      margin-top: 10px;
-    }
-
-    nav a {
-      color: #aaa;
-      margin: 0 10px;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #fff;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    section {
-      margin-bottom: 40px;
-    }
-
-    .post {
-      background: #151515;
-      padding: 20px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      border: 1px solid #222;
-    }
-
-    .post h2 {
-      margin-top: 0;
-    }
-
-    .comments {
-      margin-top: 30px;
-    }
-
-    .comments input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #1b1b1b;
-      border: 1px solid #333;
-      color: #fff;
-    }
-
-    .comments button {
-      padding: 10px 20px;
-      background: #3a3a3a;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-
-    .comments button:hover {
-      background: #555;
-    }
-
-    .comment {
-      background: #1a1a1a;
-      padding: 10px;
-      border-radius: 4px;
-      margin-top: 10px;
-      border: 1px solid #222;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 12px;
-      color: #777;
-      border-top: 1px solid #222;
-    }
-
-    .admin-btn {
-      margin-top: 20px;
-      background: #7a2e2e;
-    }
-  </style>
 </head>
 
 <body>
 
 <header>
   <h1>Grid Entertainment</h1>
-  <nav>
-    <a href="#posts">Посты</a>
-    <a href="policy.html">Политика</a>
-  </nav>
+  <p>Официальная платформа эксклюзивного контента</p>
 </header>
 
 <main>
 
-  <section id="posts">
-    <div class="post">
-      <h2>Добро пожаловать</h2>
-      <p>
-        Это официальная платформа Grid Entertainment.  
-        Здесь публикуются эксклюзивные новости, посты и материалы раньше других.
-      </p>
-    </div>
+  <section class="post">
+    <h2>Добро пожаловать</h2>
+    <p>
+      Здесь публикуются эксклюзивные новости, посты и материалы раньше других.
+    </p>
   </section>
 
   <section class="comments">
     <h2>Комментарии</h2>
 
-    <input id="name" placeholder="Ваш ник">
-    <input id="text" placeholder="Комментарий">
+    <input id="name" placeholder="Ник">
+    <textarea id="text" placeholder="Комментарий"></textarea>
+
     <button onclick="addComment()">Отправить</button>
 
     <div id="comments"></div>
 
-    <button class="admin-btn" onclick="adminLogin()">Админ-вход</button>
+    <hr>
+
+    <button class="admin" onclick="adminLogin()">Админ-вход</button>
   </section>
 
 </main>
 
 <footer>
-  © Grid Entertainment. Все права защищены.
+  <a href="policy.html">Политика и правила</a><br>
+  © Grid Entertainment
 </footer>
 
 <script src="script.js"></script>

@@ -1,13 +1,78 @@
-body {
-  background: #0f0f0f;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding-top: 50px;
+* {
+  box-sizing: border-box;
 }
 
-button {
+body {
+  margin: 0;
+  background: #0d0d0d;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: #111;
+  padding: 30px;
+  text-align: center;
+  border-bottom: 1px solid #222;
+}
+
+main {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.post {
+  background: #151515;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #222;
+  margin-bottom: 40px;
+}
+
+.comments input,
+.comments textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.comments textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.comments button {
   padding: 10px 20px;
-  font-size: 16px;
+  background: #444;
+  border: none;
+  color: white;
   cursor: pointer;
+}
+
+.comments button:hover {
+  background: #666;
+}
+
+.comment {
+  margin-top: 10px;
+  padding: 10px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  border: 1px solid #222;
+}
+
+.admin {
+  background: #7a2e2e;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #777;
+  border-top: 1px solid #222;
 }
