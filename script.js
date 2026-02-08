@@ -1,76 +1,84 @@
-const ADMIN_KEY = "GRID_ADMIN_7403";
-const VERIFIED_ACCOUNT = "Grid Entertainment";
+// Симуляция базы данных на клиенте (для локального теста)
+let users = {}; // { email: {nick, password, code, verified, galочка} }
 
-let isAdmin = false;
+// Показ формы
+function showForm(type) {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('register-form').classList.add('hidden');
 
-const bannedUsers = JSON.parse(localStorage.getItem("bannedUsers")) || [];
-const comments = JSON.parse(localStorage.getItem("comments")) || [];
-
-function adminLogin() {
-  const key = prompt("Админ-ключ:");
-  if (key === ADMIN_KEY) {
-    isAdmin = true;
-    alert("Админ-режим включён");
-    renderComments();
-  }
+    if(type === 'login') document.getElementById('login-form').classList.remove('hidden');
+    if(type === 'register') document.getElementById('register-form').classList.remove('hidden');
 }
 
-function isDangerous(text) {
-  const bad = ["взлом", "hack", "ddos", "убью", "kill", "destroy"];
-  return bad.some(w => text.toLowerCase().includes(w));
+// Генерация 6-значного кода
+function generateCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-function addComment() {
-  const name = nameInput.value.trim();
-  const text = textInput.value.trim();
+// --- РЕГИСТРАЦИЯ ---
+function registerUser() {
+    const email = document.getElementById('reg-email').value;
+    const nick = document.getElementById('reg-nick').value;
+    const password = document.getElementById('reg-password').value;
 
-  if (!name || !text) return;
-
-  if (bannedUsers.includes(name)) {
-    alert("Вы заблокированы");
-    return;
-  }
-
-  if (isDangerous(text)) {
-    bannedUsers.push(name);
-    localStorage.setItem("bannedUsers", JSON.stringify(bannedUsers));
-    alert("Обнаружены угрозы. Вы заблокированы.");
-    return;
-  }
-
-  comments.push({ name, text });
-  localStorage.setItem("comments", JSON.stringify(comments));
-  textInput.value = "";
-  renderComments();
-}
-
-function renderComments() {
-  commentsBox.innerHTML = "";
-
-  comments.forEach((c, i) => {
-    const div = document.createElement("div");
-    div.className = "comment";
-
-    const verified = c.name === VERIFIED_ACCOUNT ? " ✔" : "";
-    div.innerHTML = `<b>${c.name}${verified}</b><br>${c.text}`;
-
-    if (isAdmin) {
-      const del = document.createElement("button");
-      del.textContent = "Удалить";
-      del.onclick = () => {
-        comments.splice(i, 1);
-        localStorage.setItem("comments", JSON.stringify(comments));
-        renderComments();
-      };
-      div.appendChild(del);
+    if(users[email]) {
+        document.getElementById('reg-msg').innerText = "Аккаунт с таким e-mail уже существует. Попробуйте войти.";
+        return;
     }
 
-    commentsBox.appendChild(div);
-  });
+    const code = generateCode();
+    users[email] = { nick, password, code, verified: false, galочка: null };
+
+    // Показ блока кода
+    document.getElementById('reg-code-block').classList.remove('hidden');
+    document.getElementById('reg-msg').innerText = `Код отправлен на e-mail (для локального теста код: ${code})`;
 }
 
-const nameInput = document.getElementById("name");
-const textInput = document.getElementById("text");
-const commentsBox = document.getElementById("comments");
+// Проверка кода регистрации
+function verifyRegCode() {
+    const email = document.getElementById('reg-email').value;
+    const codeInput = document.getElementById('reg-code').value;
 
-renderComments();
+    if(users[email] && users[email].code === codeInput) {
+        users[email].verified = true;
+        document.getElementById('reg-msg').innerText = "Аккаунт подтвержден! Вы можете войти.";
+        document.getElementById('reg-code-block').classList.add('hidden');
+    } else {
+        document.getElementById('reg-msg').innerText = "Неверный код. Попробуйте снова.";
+    }
+}
+
+// --- ВХОД ---
+function loginUser() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    if(!users[email]) {
+        document.getElementById('login-msg').innerText = "Аккаунт с таким e-mail не найден.";
+        return;
+    }
+
+    if(users[email].password !== password) {
+        document.getElementById('login-msg').innerText = "Неверный пароль.";
+        return;
+    }
+
+    const code = generateCode();
+    users[email].code = code;
+
+    document.getElementById('login-code-block').classList.remove('hidden');
+    document.getElementById('login-msg').innerText = `Код отправлен на e-mail (для локального теста код: ${code})`;
+}
+
+// Проверка кода входа
+function verifyLoginCode() {
+    const email = document.getElementById('login-email').value;
+    const codeInput = document.getElementById('login-code').value;
+
+    if(users[email] && users[email].code === codeInput) {
+        document.getElementById('login-msg').innerText = `Вход успешен! Добро пожаловать, ${users[email].nick}`;
+        document.getElementById('login-code-block').classList.add('hidden');
+    } else {
+        document.getElementById('login-msg').innerText = "Неверный код. Попробуйте снова.";
+    }
+}

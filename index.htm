@@ -1,30 +1,55 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Grid Entertainment</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Grid Entertainment</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <img src="logo/logo1" alt="Avatar" class="site-avatar">
+            <img src="logo/logo2" alt="Banner" class="site-banner">
+            <h1>Добро пожаловать на Grid Entertainment</h1>
+        </header>
 
-<header class="topbar">
-  <div class="logo">
-    <img src="avatar.png" alt="Grid">
-    <span>Grid Entertainment</span>
-    <span class="verified">✔</span>
-  </div>
-  <button class="admin-btn" onclick="adminLogin()">Админ</button>
-</header>
+        <main>
+            <div id="auth-forms">
+                <button onclick="showForm('login')">Войти</button>
+                <button onclick="showForm('register')">Зарегистрироваться</button>
 
-<main class="feed">
-  <div id="posts"></div>
-</main>
+                <form id="login-form" class="hidden">
+                    <h2>Войти</h2>
+                    <input type="email" id="login-email" placeholder="E-mail" required>
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                    <button type="button" onclick="loginUser()">Отправить код</button>
+                    <div id="login-code-block" class="hidden">
+                        <input type="text" id="login-code" placeholder="Введите код">
+                        <button type="button" onclick="verifyLoginCode()">Подтвердить код</button>
+                    </div>
+                    <p id="login-msg"></p>
+                </form>
 
-<footer class="footer">
-  <a href="#">Политика конфиденциальности</a>
-  <a href="#">Правила</a>
-</footer>
+                <form id="register-form" class="hidden">
+                    <h2>Зарегистрироваться</h2>
+                    <input type="text" id="reg-nick" placeholder="Никнейм" required>
+                    <input type="email" id="reg-email" placeholder="E-mail" required>
+                    <input type="password" id="reg-password" placeholder="Пароль" required>
+                    <button type="button" onclick="registerUser()">Создать аккаунт</button>
+                    <div id="reg-code-block" class="hidden">
+                        <input type="text" id="reg-code" placeholder="Введите код">
+                        <button type="button" onclick="verifyRegCode()">Подтвердить код</button>
+                    </div>
+                    <p id="reg-msg"></p>
+                </form>
+            </div>
+        </main>
 
-<script src="script.js"></script>
+        <footer>
+            <a href="policy.html">Политика конфиденциальности и правила</a>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
