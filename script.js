@@ -1,5 +1,4 @@
-// Локальная база данных для теста
-let users = {}; // { email: {nick, password, code, verified, badge} }
+let users = {};
 let currentUser = null;
 
 // --- Модальные окна ---
@@ -16,7 +15,7 @@ function closeModal(type) {
     if(type === 'register') document.getElementById('modal-register').classList.add('hidden');
 }
 
-// Генерация 6-значного кода
+// --- Генерация кода ---
 function generateCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -33,10 +32,10 @@ function registerUser() {
     }
 
     const code = generateCode();
-    users[email] = { nick, password, code, verified: false, badge: 'Ver3' }; // по умолчанию синяя галочка
+    users[email] = { nick, password, code, verified: false, badge: 'Ver3', posts: [] };
 
     document.getElementById('reg-code-block').classList.remove('hidden');
-    document.getElementById('reg-msg').innerText = `Код отправлен на e-mail (тестовый код: ${code})`;
+    document.getElementById('reg-msg').innerText = `Код отправлен на e-mail (тест: ${code})`;
 }
 
 function verifyRegCode() {
@@ -71,7 +70,7 @@ function loginUser() {
     users[email].code = code;
 
     document.getElementById('login-code-block').classList.remove('hidden');
-    document.getElementById('login-msg').innerText = `Код отправлен на e-mail (тестовый код: ${code})`;
+    document.getElementById('login-msg').innerText = `Код отправлен на e-mail (тест: ${code})`;
 }
 
 function verifyLoginCode() {
@@ -81,9 +80,8 @@ function verifyLoginCode() {
     if(users[email] && users[email].code === codeInput) {
         currentUser = users[email];
         showUserPanel();
-        document.getElementById('login-code-block').classList.add('hidden');
-        document.getElementById('login-msg').innerText = "";
         closeModal('login');
+        document.getElementById('auth-screen').classList.add('hidden');
     } else {
         document.getElementById('login-msg').innerText = "Неверный код. Попробуйте снова.";
     }
@@ -93,5 +91,27 @@ function verifyLoginCode() {
 function showUserPanel() {
     document.getElementById('user-panel').classList.remove('hidden');
     document.getElementById('user-nick').innerText = currentUser.nick;
-    document.getElementById('user-badge').src = `Ver logo/${currentUser.badge}`;
+    document.getElementById('user-badge').src = `Ver logo/${currentUser.badge}.png`;
+    renderPosts();
+}
+
+// --- Посты ---
+function addPost() {
+    const postText = document.getElementById('new-post').value.trim();
+    if(!postText) return;
+
+    currentUser.posts.push({ text: postText });
+    renderPosts();
+    document.getElementById('new-post').value = '';
+}
+
+function renderPosts() {
+    const list = document.getElementById('posts-list');
+    list.innerHTML = '';
+    currentUser.posts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.innerText = p.text;
+        list.appendChild(div);
+    });
 }

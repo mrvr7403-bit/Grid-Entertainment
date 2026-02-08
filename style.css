@@ -1,16 +1,8 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(-45deg, #1c1c1c, #2c2c2c, #1a1a1a, #2a2a2a);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: linear-gradient(135deg, #1c1c1c, #2c2c2c);
     color: #fff;
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 .container {
@@ -23,6 +15,7 @@ body {
 .site-banner {
     width: 100%;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
 
 .auth-buttons button {
@@ -33,10 +26,12 @@ body {
     border: none;
     border-radius: 5px;
     transition: 0.3s;
+    background-color: #333;
+    color: #fff;
 }
 
 .auth-buttons button:hover {
-    background-color: #444;
+    background-color: #555;
 }
 
 .modal {
@@ -103,7 +98,7 @@ button {
     text-align: left;
 }
 
-.posts-container div {
+.posts-container div.post {
     background: #2a2a2a;
     padding: 10px;
     margin: 5px 0;

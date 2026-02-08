@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Grid Entertainment</title>
-    
-    <!-- Favicon: теперь вкладка будет с вашим аватаром -->
+
+    <!-- Favicon: вкладка браузера -->
     <link rel="icon" type="image/png" href="logo/logo1.png">
 
     <!-- Стили -->
@@ -17,7 +17,48 @@
             <img src="logo/logo2.png" alt="Banner" class="site-banner">
         </header>
 
-        <!-- Панель пользователя (аватар) -->
+        <!-- Заставка входа / регистрации -->
+        <div id="auth-screen">
+            <h1>Добро пожаловать в Grid Entertainment</h1>
+            <div class="auth-buttons">
+                <button onclick="openModal('login')">Войти</button>
+                <button onclick="openModal('register')">Зарегистрироваться</button>
+            </div>
+        </div>
+
+        <!-- Модальные окна -->
+        <div id="modal-login" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('login')">&times;</span>
+                <h2>Войти</h2>
+                <input type="email" id="login-email" placeholder="E-mail" required>
+                <input type="password" id="login-password" placeholder="Пароль" required>
+                <button onclick="loginUser()">Отправить код</button>
+                <div id="login-code-block" class="hidden">
+                    <input type="text" id="login-code" placeholder="Введите код">
+                    <button onclick="verifyLoginCode()">Подтвердить код</button>
+                </div>
+                <p id="login-msg"></p>
+            </div>
+        </div>
+
+        <div id="modal-register" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('register')">&times;</span>
+                <h2>Зарегистрироваться</h2>
+                <input type="text" id="reg-nick" placeholder="Никнейм" required>
+                <input type="email" id="reg-email" placeholder="E-mail" required>
+                <input type="password" id="reg-password" placeholder="Пароль" required>
+                <button onclick="registerUser()">Создать аккаунт</button>
+                <div id="reg-code-block" class="hidden">
+                    <input type="text" id="reg-code" placeholder="Введите код">
+                    <button onclick="verifyRegCode()">Подтвердить код</button>
+                </div>
+                <p id="reg-msg"></p>
+            </div>
+        </div>
+
+        <!-- Панель пользователя -->
         <div id="user-panel" class="hidden">
             <div class="user-header">
                 <img src="logo/logo1.png" alt="Аватар пользователя" class="user-avatar">
@@ -27,8 +68,14 @@
             <div class="posts-container">
                 <h3>Посты</h3>
                 <div id="posts-list"></div>
+                <input type="text" id="new-post" placeholder="Написать пост">
+                <button onclick="addPost()">Отправить</button>
             </div>
         </div>
+
+        <footer>
+            <a href="policy.html">Политика конфиденциальности и правила</a>
+        </footer>
     </div>
 
     <script src="script.js"></script>
