@@ -15,43 +15,97 @@ body {
 
 .container {
     width: 90%;
-    max-width: 600px;
-    margin: 50px auto;
+    max-width: 700px;
+    margin: 20px auto;
     text-align: center;
 }
 
-header img.site-avatar {
-    width: 80px;
-    margin: 10px;
-}
-
-header img.site-banner {
+.site-banner {
     width: 100%;
-    margin: 10px 0;
+    margin-bottom: 20px;
 }
 
-form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.auth-buttons button {
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: 0.3s;
 }
+
+.auth-buttons button:hover {
+    background-color: #444;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.close {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.hidden { display: none; }
 
 input {
     padding: 10px;
+    margin: 5px 0;
+    width: 90%;
     font-size: 1rem;
 }
 
 button {
     padding: 10px;
     font-size: 1rem;
+    margin-top: 10px;
     cursor: pointer;
 }
 
-.hidden {
-    display: none;
+.user-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-footer {
-    margin-top: 30px;
+.user-avatar {
+    width: 60px;
+    border-radius: 50%;
+}
+
+.badge {
+    width: 30px;
+}
+
+.posts-container {
+    text-align: left;
+}
+
+.posts-container div {
+    background: #2a2a2a;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
 }

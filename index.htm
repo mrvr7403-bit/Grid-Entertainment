@@ -3,46 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Grid Entertainment</title>
+    <link rel="icon" type="image/png" href="logo/logo1">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <img src="logo/logo1" alt="Avatar" class="site-avatar">
             <img src="logo/logo2" alt="Banner" class="site-banner">
-            <h1>Добро пожаловать на Grid Entertainment</h1>
         </header>
 
         <main>
-            <div id="auth-forms">
-                <button onclick="showForm('login')">Войти</button>
-                <button onclick="showForm('register')">Зарегистрироваться</button>
+            <div class="auth-buttons">
+                <button onclick="openModal('login')">Войти</button>
+                <button onclick="openModal('register')">Зарегистрироваться</button>
+            </div>
 
-                <form id="login-form" class="hidden">
+            <!-- Модальные окна -->
+            <div id="modal-login" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('login')">&times;</span>
                     <h2>Войти</h2>
                     <input type="email" id="login-email" placeholder="E-mail" required>
                     <input type="password" id="login-password" placeholder="Пароль" required>
-                    <button type="button" onclick="loginUser()">Отправить код</button>
+                    <button onclick="loginUser()">Отправить код</button>
                     <div id="login-code-block" class="hidden">
                         <input type="text" id="login-code" placeholder="Введите код">
-                        <button type="button" onclick="verifyLoginCode()">Подтвердить код</button>
+                        <button onclick="verifyLoginCode()">Подтвердить код</button>
                     </div>
                     <p id="login-msg"></p>
-                </form>
+                </div>
+            </div>
 
-                <form id="register-form" class="hidden">
+            <div id="modal-register" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('register')">&times;</span>
                     <h2>Зарегистрироваться</h2>
                     <input type="text" id="reg-nick" placeholder="Никнейм" required>
                     <input type="email" id="reg-email" placeholder="E-mail" required>
                     <input type="password" id="reg-password" placeholder="Пароль" required>
-                    <button type="button" onclick="registerUser()">Создать аккаунт</button>
+                    <button onclick="registerUser()">Создать аккаунт</button>
                     <div id="reg-code-block" class="hidden">
                         <input type="text" id="reg-code" placeholder="Введите код">
-                        <button type="button" onclick="verifyRegCode()">Подтвердить код</button>
+                        <button onclick="verifyRegCode()">Подтвердить код</button>
                     </div>
                     <p id="reg-msg"></p>
-                </form>
+                </div>
             </div>
+
+            <!-- Панель пользователя -->
+            <div id="user-panel" class="hidden">
+                <div class="user-header">
+                    <img src="logo/logo1" alt="Аватар пользователя" class="user-avatar">
+                    <h2 id="user-nick"></h2>
+                    <img id="user-badge" class="badge" src="" alt="">
+                </div>
+                <div class="posts-container">
+                    <h3>Посты</h3>
+                    <div id="posts-list"></div>
+                </div>
+            </div>
+
         </main>
 
         <footer>

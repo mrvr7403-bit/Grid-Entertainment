@@ -1,13 +1,19 @@
-// Симуляция базы данных на клиенте (для локального теста)
-let users = {}; // { email: {nick, password, code, verified, galочка} }
+// Локальная база данных для теста
+let users = {}; // { email: {nick, password, code, verified, badge} }
+let currentUser = null;
 
-// Показ формы
-function showForm(type) {
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('register-form').classList.add('hidden');
+// --- Модальные окна ---
+function openModal(type) {
+    document.getElementById('modal-login').classList.add('hidden');
+    document.getElementById('modal-register').classList.add('hidden');
 
-    if(type === 'login') document.getElementById('login-form').classList.remove('hidden');
-    if(type === 'register') document.getElementById('register-form').classList.remove('hidden');
+    if(type === 'login') document.getElementById('modal-login').classList.remove('hidden');
+    if(type === 'register') document.getElementById('modal-register').classList.remove('hidden');
+}
+
+function closeModal(type) {
+    if(type === 'login') document.getElementById('modal-login').classList.add('hidden');
+    if(type === 'register') document.getElementById('modal-register').classList.add('hidden');
 }
 
 // Генерация 6-значного кода
@@ -27,14 +33,12 @@ function registerUser() {
     }
 
     const code = generateCode();
-    users[email] = { nick, password, code, verified: false, galочка: null };
+    users[email] = { nick, password, code, verified: false, badge: 'Ver3' }; // по умолчанию синяя галочка
 
-    // Показ блока кода
     document.getElementById('reg-code-block').classList.remove('hidden');
-    document.getElementById('reg-msg').innerText = `Код отправлен на e-mail (для локального теста код: ${code})`;
+    document.getElementById('reg-msg').innerText = `Код отправлен на e-mail (тестовый код: ${code})`;
 }
 
-// Проверка кода регистрации
 function verifyRegCode() {
     const email = document.getElementById('reg-email').value;
     const codeInput = document.getElementById('reg-code').value;
@@ -67,18 +71,27 @@ function loginUser() {
     users[email].code = code;
 
     document.getElementById('login-code-block').classList.remove('hidden');
-    document.getElementById('login-msg').innerText = `Код отправлен на e-mail (для локального теста код: ${code})`;
+    document.getElementById('login-msg').innerText = `Код отправлен на e-mail (тестовый код: ${code})`;
 }
 
-// Проверка кода входа
 function verifyLoginCode() {
     const email = document.getElementById('login-email').value;
     const codeInput = document.getElementById('login-code').value;
 
     if(users[email] && users[email].code === codeInput) {
-        document.getElementById('login-msg').innerText = `Вход успешен! Добро пожаловать, ${users[email].nick}`;
+        currentUser = users[email];
+        showUserPanel();
         document.getElementById('login-code-block').classList.add('hidden');
+        document.getElementById('login-msg').innerText = "";
+        closeModal('login');
     } else {
         document.getElementById('login-msg').innerText = "Неверный код. Попробуйте снова.";
     }
+}
+
+// --- Панель пользователя ---
+function showUserPanel() {
+    document.getElementById('user-panel').classList.remove('hidden');
+    document.getElementById('user-nick').innerText = currentUser.nick;
+    document.getElementById('user-badge').src = `Ver logo/${currentUser.badge}`;
 }
