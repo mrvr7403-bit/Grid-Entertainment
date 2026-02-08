@@ -1,87 +1,454 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grid Entertainment</title>
+    <style>
+        /* --- CORE VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-panel: rgba(20, 20, 30, 0.7);
+            --primary: #00f2ff; /* Cyan Neon */
+            --secondary: #7000ff; /* Purple Neon */
+            --text-main: #ffffff;
+            --text-muted: #8b8b9b;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass: blur(12px) saturate(180%);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo/logo1.png">
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-    <!-- Стили -->
-    <link rel="stylesheet" href="style.css">
+        /* --- BACKGROUND PARTICLES --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+        }
 
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 242, 255, 0.5); }
+        .btn-ghost { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-ghost:hover { background: rgba(0, 242, 255, 0.1); }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* --- LANDING PAGE --- */
+        #landing-view {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .hero-title { font-size: 4rem; margin-bottom: 20px; line-height: 1.1; }
+        .hero-sub { color: var(--text-muted); font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; }
+        .cta-group { display: flex; gap: 20px; }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-card {
+            background: var(--bg-panel);
+            border: var(--border);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        
+        .modal-title { font-size: 1.8rem; margin-bottom: 20px; color: var(--primary); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; color: var(--text-muted); margin-bottom: 5px; font-size: 0.9rem; }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #fff;
+            outline: none;
+            transition: 0.2s;
+        }
+        .input-group input:focus { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
+        .modal-footer { margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); }
+        .link { color: var(--primary); cursor: pointer; text-decoration: underline; }
+
+        /* --- APP / FEED VIEW --- */
+        #app-view {
+            padding-top: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            padding-left: 20px; padding-right: 20px;
+        }
+
+        /* User Panel */
+        .user-panel {
+            background: var(--bg-panel);
+            border: var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            height: fit-content;
+            backdrop-filter: var(--glass);
+            position: sticky;
+            top: 100px;
+        }
+        .avatar-container {
+            width: 100px; height: 100px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            position: relative;
+        }
+        .avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background-color: #222;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            border: 3px solid var(--bg-dark);
+        }
+        .user-name { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .user-handle { color: var(--text-muted); margin-bottom: 20px; display: block; }
+        .stats { display: flex; justify-content: space-around; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .stat-box h4 { font-size: 1.2rem; }
+        .stat-box p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Feed Section */
+        .feed-container { max-width: 700px; width: 100%; }
+        
+        .create-post {
+            background: var(--bg-panel);
+            border: var(--border);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .post-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            resize: none;
+        }
+        
+        .post-card {
+            background: var(--bg-panel);
+            border: var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: slideUp 0.4s ease forwards;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .post-avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; }
+        .post-info h4 { font-size: 1rem; display: flex; align-items: center; gap: 5px; }
+        .post-info span { font-size: 0.8rem; color: var(--text-muted); }
+        .post-content { font-size: 1rem; line-height: 1.5; margin-bottom: 15px; color: #eee; }
+        .post-actions { display: flex; gap: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .action-btn:hover { color: var(--primary); }
+        .action-btn.liked { color: #ff4757; }
+
+        /* SVGs & Icons */
+        .badge { width: 18px; height: 18px; }
+        .badge-blue { fill: #1DA1F2; }
+        .badge-gold { fill: #FFD700; }
+        .badge-white { fill: #e1e1e1; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #app-view { grid-template-columns: 1fr; }
+            .user-panel { display: none; } /* Hide sidebar on mobile for now */
+            .hero-title { font-size: 2.5rem; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Канвас для частиц -->
-    <canvas id="particle-bg"></canvas>
 
-    <div class="container">
-        <!-- Баннер с названием -->
-        <header class="site-header">
-            <h1>Grid Entertainment</h1>
-        </header>
+    <canvas id="particle-canvas"></canvas>
 
-        <!-- Заставка входа/регистрации -->
-        <div id="auth-screen" class="auth-screen">
-            <h2>Добро пожаловать</h2>
-            <div class="auth-buttons">
-                <button onclick="openModal('login')">Войти</button>
-                <button onclick="openModal('register')">Зарегистрироваться</button>
-            </div>
+    <header>
+        <div class="brand">GRID ENTERTAINMENT</div>
+        <nav id="nav-actions">
+            </nav>
+    </header>
+
+    <section id="landing-view">
+        <h1 class="hero-title">Connect in the <br><span style="color:var(--primary)">Digital Grid</span></h1>
+        <p class="hero-sub">The next generation social platform for creators, gamers, and digital nomads. Join the network today.</p>
+        <div class="cta-group">
+            <button class="btn btn-primary" onclick="openModal('login')">Log In</button>
+            <button class="btn btn-ghost" onclick="openModal('register')">Register</button>
         </div>
+    </section>
 
-        <!-- Модальные окна -->
-        <div id="modal-login" class="modal hidden">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('login')">&times;</span>
-                <h2>Войти</h2>
-                <input type="email" id="login-email" placeholder="E-mail" required>
-                <input type="password" id="login-password" placeholder="Пароль" required>
-                <button onclick="loginUser()">Отправить код</button>
-                <div id="login-code-block" class="hidden">
-                    <input type="text" id="login-code" placeholder="Введите код">
-                    <button onclick="verifyLoginCode()">Подтвердить код</button>
+    <section id="app-view" class="hidden">
+        <aside class="user-panel">
+            <div class="avatar-container">
+                <div class="avatar" id="current-user-avatar">
+                   <svg viewBox="0 0 24 24" fill="white" width="60%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
-                <p id="login-msg"></p>
             </div>
-        </div>
+            <h3 class="user-name">
+                <span id="display-name">AlexGrid</span>
+                <span id="user-badge-container"></span>
+            </h3>
+            <span class="user-handle" id="display-handle">@alex_g</span>
+            
+            <div class="stats">
+                <div class="stat-box"><h4>12.5k</h4><p>Followers</p></div>
+                <div class="stat-box"><h4>842</h4><p>Following</p></div>
+                <div class="stat-box"><h4>89</h4><p>Posts</p></div>
+            </div>
+            <br>
+            <button class="btn btn-ghost" style="width:100%">Edit Profile</button>
+        </aside>
 
-        <div id="modal-register" class="modal hidden">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal('register')">&times;</span>
-                <h2>Зарегистрироваться</h2>
-                <input type="text" id="reg-nick" placeholder="Никнейм" required>
-                <input type="email" id="reg-email" placeholder="E-mail" required>
-                <input type="password" id="reg-password" placeholder="Пароль" required>
-                <button onclick="registerUser()">Создать аккаунт</button>
-                <div id="reg-code-block" class="hidden">
-                    <input type="text" id="reg-code" placeholder="Введите код">
-                    <button onclick="verifyRegCode()">Подтвердить код</button>
+        <main class="feed-container">
+            <div class="create-post">
+                <div class="post-avatar">
+                     <svg viewBox="0 0 24 24" fill="#888" width="100%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
-                <p id="reg-msg"></p>
+                <input type="text" class="post-input" id="new-post-content" placeholder="What's happening on the Grid?">
+                <button class="btn btn-primary" onclick="createPost()">Post</button>
+            </div>
+
+            <div id="feed-stream">
+                </div>
+        </main>
+    </section>
+
+    <div class="modal-overlay" id="modal-login">
+        <div class="modal-card">
+            <h2 class="modal-title">Access Grid</h2>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" placeholder="user@grid.ent">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" style="width: 100%" onclick="loginUser()">Enter Grid</button>
+            <div class="modal-footer">
+                New here? <span class="link" onclick="switchModal('register')">Create ID</span>
+                <br><br>
+                <span class="link" onclick="closeModals()">Close</span>
             </div>
         </div>
-
-        <!-- Панель пользователя -->
-        <div id="user-panel" class="hidden">
-            <div class="user-header">
-                <img src="logo/logo1.png" alt="Аватар пользователя" class="user-avatar">
-                <h2 id="user-nick"></h2>
-                <img id="user-badge" class="badge" src="" alt="">
-            </div>
-            <div class="posts-container">
-                <h3>Посты</h3>
-                <div id="posts-list"></div>
-                <input type="text" id="new-post" placeholder="Написать пост">
-                <button onclick="addPost()">Отправить</button>
-            </div>
-        </div>
-
-        <footer>
-            <a href="policy.html">Политика конфиденциальности и правила</a>
-        </footer>
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <div class="modal-overlay" id="modal-register">
+        <div class="modal-card">
+            <h2 class="modal-title">Initialize ID</h2>
+            <div class="input-group">
+                <label>Nickname</label>
+                <input type="text" placeholder="Desired Handle">
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" placeholder="user@grid.ent">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>Verification Code</label>
+                <input type="text" placeholder="Sent to email (Simulated)">
+            </div>
+            <button class="btn btn-primary" style="width: 100%" onclick="loginUser()">Register & Login</button>
+            <div class="modal-footer">
+                Already have ID? <span class="link" onclick="switchModal('login')">Log In</span>
+                 <br><br>
+                <span class="link" onclick="closeModals()">Close</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- ASSETS (SVGs) --- */
+        const BADGES = {
+            blue: `<svg class="badge badge-blue" viewBox="0 0 24 24"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .495.083.965.238 1.4-1.272.65-2.147 2.02-2.147 3.6 0 1.457.748 2.795 1.867 3.61-.466 1.842.296 3.81 1.912 4.637.404.207.864.316 1.33.316.326 0 .647-.053.952-.153 1.25.922 2.8 1.47 4.49 1.47s3.24-.548 4.49-1.47c.305.1.626.153.952.153.466 0 .926-.11 1.33-.316 1.616-.827 2.378-2.795 1.912-4.637 1.12-.815 1.868-2.153 1.868-3.61zM10.87 16.51L6.75 12.4l1.88-1.88 2.24 2.24 5.92-5.92 1.88 1.88-7.8 7.79z"/></svg>`,
+            gold: `<svg class="badge badge-gold" viewBox="0 0 24 24"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .495.083.965.238 1.4-1.272.65-2.147 2.02-2.147 3.6 0 1.457.748 2.795 1.867 3.61-.466 1.842.296 3.81 1.912 4.637.404.207.864.316 1.33.316.326 0 .647-.053.952-.153 1.25.922 2.8 1.47 4.49 1.47s3.24-.548 4.49-1.47c.305.1.626.153.952.153.466 0 .926-.11 1.33-.316 1.616-.827 2.378-2.795 1.912-4.637 1.12-.815 1.868-2.153 1.868-3.61zM10.87 16.51L6.75 12.4l1.88-1.88 2.24 2.24 5.92-5.92 1.88 1.88-7.8 7.79z"/></svg>`,
+            white: `<svg class="badge badge-white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`
+        };
+
+        /* --- STATE & DATA --- */
+        const currentUser = {
+            name: "Cipher_01",
+            handle: "@cipher",
+            badge: "blue", // Options: blue, gold, white
+            avatarColor: "#00f2ff"
+        };
+
+        let posts = [
+            { id: 1, name: "NeonDrifter", handle: "@drifter", badge: "gold", content: "Just deployed the new front-end architecture. The Grid is looking cleaner than ever! 🚀 #webdev #grid", time: "2m ago", likes: 24, liked: false },
+            { id: 2, name: "PixelArtis", handle: "@pixie", badge: "white", content: "Working on some new assets for the upcoming event. Can't wait to share!", time: "15m ago", likes: 5, liked: true },
+            { id: 3, name: "SysAdmin", handle: "@root_user", badge: "blue", content: "Server maintenance scheduled for 03:00 UTC. Zero downtime expected.", time: "1h ago", likes: 142, liked: false }
+        ];
+
+        /* --- INTERACTIVE FUNCTIONS --- */
+
+        // Modal Logic
+        function openModal(type) {
+            closeModals();
+            document.getElementById(`modal-${type}`).classList.add('active');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('active'));
+        }
+
+        function switchModal(toType) {
+            closeModals();
+            setTimeout(() => openModal(toType), 300);
+        }
+
+        // Login Logic (Simulation)
+        function loginUser() {
+            // Simulate API call
+            const btn = document.querySelector('.modal-overlay.active .btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "Authenticating...";
+            
+            setTimeout(() => {
+                closeModals();
+                document.getElementById('landing-view').classList.add('hidden');
+                document.getElementById('app-view').classList.remove('hidden');
+                
+                // Init User
+                document.getElementById('display-name').innerText = currentUser.name;
+                document.getElementById('display-handle').innerText = currentUser.handle;
+                document.getElementById('user-badge-container').innerHTML = BADGES[currentUser.badge];
+                
+                renderFeed();
+                btn.innerText = originalText;
+            }, 1000);
+        }
+
+        // Feed Logic
+        function renderFeed() {
+            const container = document.getElementById('feed-stream');
+            container.innerHTML = "";
+            
+            posts.forEach(post => {
+                const badgeSvg = post.badge ? BADGES[post.badge] : '';
+                const likeClass = post.liked ? 'liked' : '';
+                
+                const html = `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background: linear-gradient(135deg, #444, #222)"></div>
+                            <div class="post-info">
+                                <h4>${post.name} ${badgeSvg}</h4>
+                                <span>${post.handle} • ${post.time}</span>
+                            </div>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-actions">
+                            <button class="action-btn ${likeClass}" onclick="toggleLike(${post.id})">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                ${post.likes}
+                            </button>
+                            <button class="action-btn">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>
+                                Reply
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function createPost() {
+            const input = document.getElementById('new-post-content');
+            if(!input.value.trim()) return;
+
+            const newPost = {
+                id: Date.now(),
+                name: currentUser.name,
+                handle: currentUser.handle,
+                badge: currentUser.badge,
+                content: input.value,
+                time: "Just
