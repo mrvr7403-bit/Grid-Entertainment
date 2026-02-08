@@ -1,36 +1,30 @@
-const ADMIN_KEY = "GRID_ADMIN_7403"; // поменяй на свой
+const ADMIN_KEY = "GRID_ADMIN_7403";
+const VERIFIED_ACCOUNT = "Grid Entertainment";
+
 let isAdmin = false;
 
 const bannedUsers = JSON.parse(localStorage.getItem("bannedUsers")) || [];
 const comments = JSON.parse(localStorage.getItem("comments")) || [];
 
 function adminLogin() {
-  const key = prompt("Введите админ-ключ");
+  const key = prompt("Админ-ключ:");
   if (key === ADMIN_KEY) {
     isAdmin = true;
-    alert("Админ-доступ активирован");
+    alert("Админ-режим включён");
     renderComments();
-  } else {
-    alert("Неверный ключ");
   }
 }
 
 function isDangerous(text) {
-  const bad = [
-    "взлом", "hack", "ddos", "убью",
-    "сломаю", "угроза", "kill", "destroy"
-  ];
+  const bad = ["взлом", "hack", "ddos", "убью", "kill", "destroy"];
   return bad.some(w => text.toLowerCase().includes(w));
 }
 
 function addComment() {
-  const name = document.getElementById("name").value.trim();
-  const text = document.getElementById("text").value.trim();
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
 
-  if (!name || !text) {
-    alert("Заполните все поля");
-    return;
-  }
+  if (!name || !text) return;
 
   if (bannedUsers.includes(name)) {
     alert("Вы заблокированы");
@@ -46,24 +40,23 @@ function addComment() {
 
   comments.push({ name, text });
   localStorage.setItem("comments", JSON.stringify(comments));
-
-  document.getElementById("text").value = "";
+  textInput.value = "";
   renderComments();
 }
 
 function renderComments() {
-  const box = document.getElementById("comments");
-  box.innerHTML = "";
+  commentsBox.innerHTML = "";
 
   comments.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "comment";
-    div.innerHTML = `<b>${c.name}</b>: ${c.text}`;
+
+    const verified = c.name === VERIFIED_ACCOUNT ? " ✔" : "";
+    div.innerHTML = `<b>${c.name}${verified}</b><br>${c.text}`;
 
     if (isAdmin) {
       const del = document.createElement("button");
       del.textContent = "Удалить";
-      del.style.marginLeft = "10px";
       del.onclick = () => {
         comments.splice(i, 1);
         localStorage.setItem("comments", JSON.stringify(comments));
@@ -72,8 +65,12 @@ function renderComments() {
       div.appendChild(del);
     }
 
-    box.appendChild(div);
+    commentsBox.appendChild(div);
   });
 }
+
+const nameInput = document.getElementById("name");
+const textInput = document.getElementById("text");
+const commentsBox = document.getElementById("comments");
 
 renderComments();
