@@ -4,22 +4,26 @@
     <meta charset="UTF-8">
     <title>Grid Entertainment</title>
 
-    <!-- Favicon: вкладка браузера -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo/logo1.png">
 
     <!-- Стили -->
     <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
+    <!-- Канвас для частиц -->
+    <canvas id="particle-bg"></canvas>
+
     <div class="container">
-        <!-- Баннер сайта -->
-        <header>
-            <img src="logo/logo2.png" alt="Banner" class="site-banner">
+        <!-- Баннер с названием -->
+        <header class="site-header">
+            <h1>Grid Entertainment</h1>
         </header>
 
-        <!-- Заставка входа / регистрации -->
-        <div id="auth-screen">
-            <h1>Добро пожаловать в Grid Entertainment</h1>
+        <!-- Заставка входа/регистрации -->
+        <div id="auth-screen" class="auth-screen">
+            <h2>Добро пожаловать</h2>
             <div class="auth-buttons">
                 <button onclick="openModal('login')">Войти</button>
                 <button onclick="openModal('register')">Зарегистрироваться</button>
